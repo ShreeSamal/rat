@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const cors = require('cors');
+
+app.use(cors());
 
 app.get('/home', (req, res) => {
     res.send('Hello from Node.js!');
@@ -20,6 +23,6 @@ io.on('connection', (socket) => {
   });
 });
 
-http.listen(3005, () => {
+http.listen(process.env.PORT||3005, () => {
   console.log('Node.js server running on port 3000');
 });
