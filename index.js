@@ -23,6 +23,6 @@ io.on('connection', (socket) => {
   });
 });
 
-http.listen(process.env.PORT||3005, () => {
+http.listen(3005, () => {
   console.log('Node.js server running on port 3005');
 });
