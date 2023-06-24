@@ -7,7 +7,7 @@ const cors = require('cors');
 app.use(cors());
 
 app.get('/home', (req, res) => {
-    res.send(`Hello from Node.js! ${process.env.PORT}`);
+    res.send(`Hello from Node.js! ${process.env.PORT }`);
 });
 
 io.on('connection', (socket) => {
