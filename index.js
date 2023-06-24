@@ -7,7 +7,7 @@ const cors = require('cors');
 app.use(cors());
 
 app.get('/home', (req, res) => {
-    res.send('Hello from Node.js!');
+    res.send(`Hello from Node.js! ${process.env.PORT}`);
 });
 
 io.on('connection', (socket) => {
@@ -24,5 +24,5 @@ io.on('connection', (socket) => {
 });
 
 http.listen(process.env.PORT||3005, () => {
-  console.log('Node.js server running on port 3000');
+  console.log('Node.js server running on port 3005');
 });
