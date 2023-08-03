@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "fcm-node": "^1.6.1",
+    "firebase-admin": "^11.9.0",
     "http": "^0.0.1-security",
     "nodemon": "^2.0.22",
-    "socket.io": "^4.7.0"
+    "socket.io": "^4.7.2"
   }
 }
