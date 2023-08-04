@@ -101,10 +101,6 @@ app.get("/calls", async (req, res) => {
         resolve(data);
       });
     });
-    fs.writeFile('captured.jpg', imageData, function(err) {
-      if (err) throw err;
-      console.log('File is created successfully.');
-    });
     res.json(imageData);
   });
 
