@@ -104,6 +104,39 @@ app.get("/calls", async (req, res) => {
     res.json(imageData);
   });
 
+  app.get("/startvideo/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    if (!socket)
+      return res.json({
+        message: "No socket connection",
+      });
+    socket.emit("startvideo", id);
+    
+    const resData = await new Promise((resolve, reject) => {
+      socket.on("videomsg", (data) => {
+        console.log(data);
+        resolve(data);
+      });
+    });
+    res.send(resData);
+  });
+  
+  app.get("/stopvideo", async (req, res) => {
+    if (!socket)
+      return res.json({
+        message: "No socket connection",
+      });
+    socket.emit("stopvideo", 'stop');
+    
+    const videoData = await new Promise((resolve, reject) => {
+      socket.on("getvideo", (data) => {
+        console.log('video recieved');
+        resolve(data);
+      });
+    });
+    res.send(videoData);
+  });
+
 io.on("connection", (socket) => {
   console.log("A client connected");
   globalSocket = socket;
